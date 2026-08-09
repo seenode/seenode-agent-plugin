@@ -18,7 +18,7 @@ Managed engines: **MySQL** and **PostgreSQL**. Use `database_type` values `mysql
 - Wire apps with `link_database_to_application` (server-side copy into secret env vars).
 - After `rotate_database_user_password`, call `link_database_to_application` again with `overwrite=true`.
 - Poll `get_database_state` until ready before linking.
-- Check `get_credit_balance` before paid package creates/upgrades; speak amounts in **USD**.
+- Check `get_credit_balance` before paid package creates/upgrades; quote `pricePerMonthUsd` and `creditBalanceUsd` (never DIY cents→dollars).
 - There is **no** delete/destroy database tool via MCP — send teardown to the dashboard.
 
 ## Discover

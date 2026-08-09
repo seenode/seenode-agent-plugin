@@ -105,7 +105,7 @@ Persistent volumes: see the **storage** skill (`list_application_storage`, `crea
 ## Safety
 
 - No delete-application tool — send destructive cleanup to the dashboard.
-- Package upgrades cost credit — confirm with the user first (`get_credit_balance`).
+- Package upgrades cost credit — confirm with the user first; quote `pricePerMonthUsd` and `get_credit_balance`’s `creditBalanceUsd`.
 - Never invent application IDs; resolve via list/get.
 
 ## Relevant tools

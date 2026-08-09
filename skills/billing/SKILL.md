@@ -4,13 +4,13 @@ description: Inspect Seenode team credits, usage, spending, orders, and ledger; 
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.0"
+  version: "0.3.0"
   category: billing
 ---
 
 # Billing and credits on Seenode
 
-All amounts should be presented to users in **USD**. API fields often use cents — prefer `creditBalanceUsd` (and convert other cent fields) when summarizing.
+Present money to users from **`*Usd` fields only** (`creditBalanceUsd`, `totalCostUsd`, `pricePerMonthUsd`, `totalAmountUsd`, etc.). Treat `*Cents` as the exact ledger unit — do not present it as dollars. Never manually divide or quote ambiguous fields like `totalCost`, `pricePerMonth`, or `amount` as dollars.
 
 ## Read-only overview (start here)
 
@@ -55,7 +55,7 @@ Before `pay_now`, show `get_credit_balance` + `get_team_usage` so the user knows
 - Confirm before `pay_now`, `create_checkout_session`, and `create_setup_intent`.
 - Never invent balances or claim deletes/refunds the MCP cannot perform.
 - Do not document operator Stripe keys, webhook secrets, or platform billing internals.
-- Speak credits and spend in USD.
+- Speak credits and spend in USD using `*Usd` fields only.
 
 ## Relevant tools
 

@@ -31,7 +31,7 @@ create_project? → create_database → poll get_database_state
   → link_database_to_application → create_deployment / wait_for_deployment
 ```
 
-Check `get_credit_balance` before paid creates. Speak credits/spend in **USD**.
+Check `get_credit_balance` before paid creates. Quote `pricePerMonthUsd` / `creditBalanceUsd` only (never DIY cents→dollars).
 
 ### MCP capability gaps (do not invent workarounds)
 
@@ -196,7 +196,7 @@ On `SUCCESSFUL`, summarize with a markdown link to the default domain, e.g. [Ope
 - Runtime ≠ env var → `list_images` / create `runtime` / `update_build_settings`
 - Package ≠ runtime → `list_application_packages` / `list_database_packages` + `update_application` / `update_database`
 - Env changes **restart**; build-settings / `create_deployment` **rebuild**
-- Speak credits and spend in USD (`get_credit_balance`, **billing** skill)
+- Speak credits and spend via `*Usd` fields only (`creditBalanceUsd`, `pricePerMonthUsd`; **billing** skill)
 
 ## Safety
 

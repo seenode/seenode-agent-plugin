@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-08-09
+
+### Changed
+
+- Billing and related skills quote MCP `*Usd` fields only; stop DIY cents→dollars conversion
+- Aligns with hosted MCP USD-first money shaping (`creditBalanceUsd`, `totalCostUsd`, `pricePerMonthUsd`, etc.)
+
 ## [0.2.0] - 2026-08-09
 
 ### Changed

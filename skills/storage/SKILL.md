@@ -32,7 +32,7 @@ create_application_storage(
 )
 ```
 
-Side effect: provisions asynchronously. Confirm with the user before paid size tiers; check `get_credit_balance` when spend is a concern. Speak costs in **USD**.
+Side effect: provisions asynchronously. Confirm with the user before paid size tiers; check `get_credit_balance` when spend is a concern. Quote package `pricePerMonthUsd` / `creditBalanceUsd` only (never DIY cents→dollars).
 
 ## Update (resize / remount / rename)
 
