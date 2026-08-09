@@ -1,36 +1,59 @@
 ---
 name: databases
-description: Inspect and update existing Seenode MySQL/PostgreSQL databases, review metrics, and wire connection settings into applications. Use when the user asks about Seenode databases, connection env vars, DB metrics, or renaming/moving a database. Cannot create databases via MCP — guide users to the dashboard.
+description: Create, inspect, update, rotate, and link Seenode MySQL/PostgreSQL databases to applications via MCP. Use when the user asks about Seenode databases, provisioning, connection wiring, password rotation, DB metrics, or renaming/moving a database. Prefer link_database_to_application — never paste DB passwords.
 license: MIT
 metadata:
   author: Seenode
-  version: "0.1.0"
+  version: "0.2.0"
   category: databases
 ---
 
 # Seenode databases
 
-Managed engines: **MySQL** and **PostgreSQL**.
+Managed engines: **MySQL** and **PostgreSQL**. Use `database_type` values `mysql` or `postgresql` (never `postgres`).
 
-## Hard limit: no create via MCP
+## Hard rules
 
-There is **no** `create_database` tool on the Seenode MCP. When a new database is required:
-
-1. Tell the user to create MySQL or PostgreSQL in the [Seenode dashboard](https://cloud.seenode.com).
-2. Wait until they confirm creation.
-3. `list_databases` / `get_database` to locate it.
-4. Wire connection details they provide into the app with `set_environment_variables` (secrets in `secret_keys`).
-
-Never invent hosts, users, or passwords. Never claim you created a database through MCP.
+- **Never** fetch, echo, or ask the user to paste raw DB passwords or full connection strings into chat.
+- Wire apps with `link_database_to_application` (server-side copy into secret env vars).
+- After `rotate_database_user_password`, call `link_database_to_application` again with `overwrite=true`.
+- Poll `get_database_state` until ready before linking.
+- Check `get_credit_balance` before paid package creates/upgrades; speak amounts in **USD**.
+- There is **no** delete/destroy database tool via MCP — send teardown to the dashboard.
 
 ## Discover
 
 ```
 list_databases(project_id=null, page=1)
 get_database(database_id=...)
+get_database_state(database_id=...)
+list_database_packages()
 ```
 
-Secret-looking fields (passwords, connection strings) are **redacted** in MCP responses. Obtain real credentials from the user or dashboard UI when wiring apps.
+Secret-looking fields (passwords, connection strings) are **redacted** in MCP responses. Do not hunt for connection-details patterns — use the link tool.
+
+## Create
+
+```
+get_credit_balance()
+list_database_packages()   # optional; omit package_id for free-trial/cheapest create-enabled package
+create_database(
+  database_type="postgresql"|"mysql",
+  database_version=null,
+  custom_name=null,
+  description=null,
+  project_id=null,
+  package_id=null
+)
+```
+
+Provisioning is asynchronous. Poll:
+
+```
+get_database_state(database_id=...)
+```
+
+Then continue the **deploy** recipe (`create_application` → `link_database_to_application`) or link an existing app.
 
 ## Metrics
 
@@ -54,31 +77,53 @@ update_database(
 
 Package changes consume team credit — get explicit approval.
 
-## Wire an application
-
-1. Confirm DB exists (`list_databases`).
-2. Ask the user for connection values from the dashboard (URL or host/port/user/password/name).
-3. Match the repo’s expected env shape (`DATABASE_URL` vs `DB_HOST`…).
-4. Set via create-time `environment_variables` or:
+## Rotate password
 
 ```
-set_environment_variables(
+rotate_database_user_password(database_id=..., user_id=..., password=null)
+```
+
+Omit `password` to let the API generate one (never returned). Then immediately:
+
+```
+link_database_to_application(
   application_id=...,
-  variables={"DATABASE_URL": "..."},
-  secret_keys=["DATABASE_URL"]
+  database_id=...,
+  env_prefix="DATABASE",
+  overwrite=true
 )
 ```
 
-5. Verify with app runtime logs / a successful deploy — not by echoing secrets.
+## Link an application
+
+Prefer this over `set_environment_variables` for DB credentials:
+
+```
+link_database_to_application(
+  application_id=...,
+  database_id=...,
+  env_prefix="DATABASE",   # DATABASE_HOST, _PORT, _USER, _PASSWORD, _NAME, _URL
+  overwrite=true
+)
+```
+
+Set `overwrite=false` only when you must fail if target keys already exist. Match `env_prefix` to what the app expects when the repo uses a non-default prefix.
+
+Verify with app runtime logs / a successful deploy — not by echoing secrets.
 
 ## What MCP cannot do
 
-- Create or delete databases
-- Reset passwords programmatically (use dashboard)
+- Delete/destroy databases
 - Manage non-Seenode engines (e.g. MongoDB, Redis) as platform DBs
+- Return raw passwords after rotate or create
+
+## Relevant tools
+
+`list_databases`, `get_database`, `get_database_state`, `list_database_packages`, `create_database`, `update_database`, `rotate_database_user_password`, `link_database_to_application`, `get_database_metrics`, `get_credit_balance`
 
 ## Related skills
 
-- **deploy** — full deploy loop including DB gating
-- **environment** — env var mechanics
+- **deploy** — full deploy loop including create → state → link → wait
+- **environment** — non-DB env vars; prefer link for DB secrets
 - **troubleshoot** — connection error patterns
+- **billing** — credit balance before paid packages

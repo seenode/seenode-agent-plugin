@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "seenode",
-      "description": "Deploy, troubleshoot, and manage applications, databases, domains, and projects on Seenode via the hosted Seenode MCP.",
+      "description": "Deploy, troubleshoot, and manage applications, databases, storage, domains, projects, and billing on Seenode via the hosted Seenode MCP.",
       "author": {
         "name": "Seenode",
         "email": "help@seenode.com"

@@ -12,7 +12,7 @@ Classify log lines, then apply the matching fix. Prefer one coherent fix pass ov
 list_environment_variables(application_id=...)
 ```
 
-Compare keys to `.env.example` / app config. Missing secrets: ask the user for values.
+Compare keys to `.env.example` / app config. Missing non-DB secrets: ask the user for values. Missing DB keys: prefer `link_database_to_application`.
 
 **Fix:**
 
@@ -24,7 +24,13 @@ set_environment_variables(
 )
 ```
 
-Env updates restart instances; they do not rebuild. If the app needs a new build artifact, follow with `create_deployment`.
+Or for managed DBs:
+
+```
+link_database_to_application(application_id=..., database_id=..., overwrite=true)
+```
+
+Env updates restart instances; they do not rebuild. If the app needs a new build artifact, follow with `create_deployment` / `wait_for_deployment`.
 
 ## PORT_BINDING
 
@@ -40,7 +46,7 @@ Env updates restart instances; they do not rebuild. If the app needs a new build
 
 **Checks:** `get_application_logs(..., log_types=["build"])`. Verify lockfile matches install command (`npm ci` vs `pnpm`).
 
-**Fix:** Repair package manifests locally and push, and/or correct `build_command` via `update_build_settings`. Then poll `get_deployments`.
+**Fix:** Repair package manifests locally and push, and/or correct `build_command` via `update_build_settings`. Then `wait_for_deployment` (or poll `get_deployments`).
 
 ## WRONG_RUNTIME
 
@@ -59,17 +65,18 @@ Env updates restart instances; they do not rebuild. If the app needs a new build
 ```
 list_databases()
 get_database(database_id=...)
+get_database_state(database_id=...)
 list_environment_variables(application_id=...)
 get_database_metrics(database_id=..., metric_type="connections")
 ```
 
-**Fix:** Correct connection env with `set_environment_variables` (secrets in `secret_keys`). If no DB exists, user must create one in the dashboard — MCP cannot create databases. Confirm host/port/user/name against dashboard values the user provides; never invent passwords.
+**Fix:** Prefer `link_database_to_application(..., overwrite=true)` — never invent or paste passwords. If no DB exists, `create_database` → poll `get_database_state` → link. After `rotate_database_user_password`, link again with `overwrite=true`. Confirm readiness via `get_database_state`, not by echoing secrets.
 
 ## START_COMMAND
 
 **Signals:** build succeeds, runtime exits immediately, `npm start` missing script, wrong module path (`dist/main` missing).
 
-**Fix:** Correct `run_command` (and build output paths) via `update_build_settings`. Ensure build actually emits the files the start command expects.
+**Fix:** Correct `run_command` (and build output paths) via `update_build_settings`. Ensure build actually emits the files the start command expects. If settings look correct but the process is wedged, try `restart_application`.
 
 ## OUT_OF_MEMORY
 
@@ -81,27 +88,33 @@ get_database_metrics(database_id=..., metric_type="connections")
 get_application_metrics(application_id=..., metric_type="memory", range_hours=1)
 ```
 
-**Fix:** Reduce memory use in code/build; or discuss package/scale changes via `update_application` (package changes consume team credit). Do not silently upgrade paid tiers without user approval.
+**Fix:** Reduce memory use in code/build; or discuss package/scale changes via `update_application` / `list_application_packages` (package changes consume team credit). Do not silently upgrade paid tiers without user approval.
 
 ## LIMITS
 
 **Signals:** deployment `state` = `LIMITS`, quota errors in API responses.
 
-**Fix:** Explain team/plan limits; direct the user to [cloud.seenode.com](https://cloud.seenode.com) billing/package options. Do not invent credits.
+**Fix:** Explain with `get_team_limits` / `get_credit_balance` / **billing** skill. Do not invent credits.
 
 ## HEALTH / HTTP 5xx AFTER SUCCESSFUL DEPLOY
 
 **Signals:** `lastDeployment.state` is `SUCCESSFUL` but users see 502/503 or empty responses.
 
-**Checks:** runtime + request logs; port binding; required env; DB connectivity; metrics.
+**Checks:** runtime + request logs; port binding; required env; DB connectivity (`link_database_to_application`); metrics; optional `restart_application`.
 
-**Fix:** Treat as runtime misconfiguration (often port or env), not a failed build.
+**Fix:** Treat as runtime misconfiguration (often port, env, or DB link), not a failed build.
 
 ## GIT / AUTHORIZATION
 
 **Signals:** cannot list repositories, clone/auth errors, provider not connected.
 
-**Checks:** `get_git_connections` → `connect_git_provider` → user completes browser flow → re-check. Ensure the repo is within the installed GitHub App / GitLab permissions.
+**Checks:** `get_git_connections` → `connect_git_provider` → user completes browser flow → re-check. Ensure the repo is within the installed GitHub App / GitLab permissions. `inspect_repository` can also surface provider auth failures.
+
+## STUCK_DEPLOY
+
+**Signals:** deployment stays `NEW`/`RUNNING` far too long; user wants to abort.
+
+**Fix:** `cancel_deployment(application_id=..., deployment_uuid=...)` then investigate logs and redeploy with `create_deployment` / `wait_for_deployment` if appropriate.
 
 ## Fix budget
 

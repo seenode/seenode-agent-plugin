@@ -1,10 +1,10 @@
 ---
 name: domains
-description: Attach custom domains to Seenode web applications, show DNS records, and poll verification until DNS/TLS/routing are ready. Use when the user wants a custom domain, DNS setup, SSL status, or to check if a domain is live on Seenode.
+description: Attach and update custom domains on Seenode web applications, show DNS records, and poll verification until DNS/TLS/routing are ready. Use when the user wants a custom domain, DNS setup, SSL status, default-domain changes, or to check if a domain is live on Seenode.
 license: MIT
 metadata:
   author: Seenode
-  version: "0.1.0"
+  version: "0.2.0"
   category: networking
 ---
 
@@ -40,6 +40,14 @@ Notes:
 
 Report every returned DNS record to the user clearly (type, name, value).
 
+## Update default domain
+
+```
+update_domain(application_id=..., domain_id=..., default=true|false)
+```
+
+Use after `list_domains` to resolve `domain_id`. Confirm with the user before changing which custom domain is primary.
+
 ## Verify / poll status
 
 After the user creates DNS records:
@@ -68,3 +76,7 @@ When not ready, use `pending` and `dnsSetup`. There is **no** force re-check —
 - Do not claim the domain works until `ready`.
 - No delete-domain tool via MCP — remove domains in the dashboard.
 - Confirm the target app is `web` via `get_application` before adding.
+
+## Relevant tools
+
+`list_domains`, `add_domain`, `update_domain`, `check_domain_status`, `get_application`

@@ -23,14 +23,18 @@ Thanks for helping improve the Seenode Agent Plugin.
 
 - MCP server source code
 - Secrets, tokens, or `Authorization` headers in config
-- Invented MCP tools or unsupported product types (e.g. claiming `create_database` exists)
+- Invented MCP tools or unsupported product types
+- Operator / platform internals (OAuth DCR, k8s secrets, introspection endpoints, API-token curl recipes, non-production MCP URLs)
 - A `.cursor-plugin/` directory (Cursor loads the portable Agent Plugin format)
 
 ## Skills guidelines
 
 - Keep `SKILL.md` action-oriented; put deep checklists in `references/`
 - Frontmatter must include `name` and `description`; `name` must match the directory
-- Document MCP gaps honestly (no database create, no deletes, poll instead of wait helpers)
+- Track the platform MCP tool registry (`platform/apps/mcp/service/tools/`): every registered tool should appear in at least one skill; do not invent tool names
+- Document remaining gaps honestly (no destroy for apps/DBs/domains/projects/storage; no static-site/cron/blueprint/key-value types)
+- Teach `create_database` → `get_database_state` → `link_database_to_application`; never teach pasting DB passwords
+- Prefer `wait_for_deployment` over busy-polling; confirm before billing money mutations
 - Prefer inspect → plan → mutate → verify
 
 ## Pull requests

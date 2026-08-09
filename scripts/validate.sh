@@ -149,8 +149,10 @@ expected = [
     "applications",
     "environment",
     "databases",
+    "storage",
     "domains",
     "projects",
+    "billing",
 ]
 skills_root = Path("skills")
 failures = 0

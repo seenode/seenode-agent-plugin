@@ -23,14 +23,10 @@ Auth is **OAuth 2.1 + PKCE** against Seenode. Do not add `Authorization` headers
 3. Smoke-test with a read-only prompt:
    - “Call `get_current_team` and tell me which Seenode team I’m using.”
    - or “List my Seenode web applications.”
-4. Only then run mutating flows (create app, set secrets, add domain).
-
-## Dev MCP
-
-A development MCP exists at `https://mcp.dev.seenode.com/mcp` for platform engineering. **This plugin’s manifests intentionally use production only.** Do not point published plugin configs at the dev endpoint unless you are deliberately testing platform changes.
+4. Only then run mutating flows (create app or database, link DB, set secrets, add domain, billing mutations).
 
 ## Requirements
 
-- A Seenode account ([cloud.seenode.com](https://cloud.seenode.com))
+- A Seenode account ([seenode.com/dashboard](https://seenode.com/dashboard))
 - For deploys: a GitHub or GitLab repository the account can connect via Seenode’s git integration
 - Client support for Agent Skills and MCP (per client doc)

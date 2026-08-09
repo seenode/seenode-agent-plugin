@@ -9,8 +9,9 @@ This repository is a **portable Agent Plugin**: shared skills plus thin client a
 Use this plugin when you want an AI coding agent to:
 
 - Deploy a GitHub or GitLab repo to Seenode as a web, worker, or private app
-- Debug failed builds and runtime crashes with logs and metrics
-- Manage environment variables, custom domains, projects, and existing MySQL/PostgreSQL databases
+- Create and link managed MySQL/PostgreSQL databases (without pasting passwords)
+- Debug failed builds and runtime crashes with logs, metrics, wait/cancel helpers
+- Manage environment variables, custom domains, projects, storage volumes, and billing/credits
 
 ## Architecture
 
@@ -37,34 +38,36 @@ After install, complete Seenode OAuth when prompted, then try a read-only smoke 
 ## Example prompts
 
 - “Deploy this repository to Seenode as a web app.”
-- “Why did my latest Seenode deployment fail?”
+- “Create a PostgreSQL database, wait until it’s ready, and link it to my app.”
+- “Why did my latest Seenode deployment fail? Wait for the next deploy after you fix it.”
+- “What’s my Seenode credit balance in USD?”
 - “List my Seenode applications and their deploy status.”
 - “Add `example.com` to my Seenode web app and show the DNS records.”
-- “Set `DATABASE_URL` on app 123 as a secret from the value I’ll paste.”
 
 ## Skills
 
 | Skill | Purpose |
 |-------|---------|
-| [`deploy`](skills/deploy/SKILL.md) | End-to-end deploy from a git repo |
+| [`deploy`](skills/deploy/SKILL.md) | End-to-end deploy: DB → inspect → app → link → wait |
 | [`troubleshoot`](skills/troubleshoot/SKILL.md) | Failed deploys and apps that won’t start |
 | [`applications`](skills/applications/SKILL.md) | Discover and manage web/worker/private apps |
-| [`environment`](skills/environment/SKILL.md) | Env vars and secrets |
-| [`databases`](skills/databases/SKILL.md) | Inspect/update existing DBs; wire apps (create via dashboard) |
+| [`environment`](skills/environment/SKILL.md) | Env vars and secrets (prefer DB link over paste) |
+| [`databases`](skills/databases/SKILL.md) | Create, update, rotate, and link managed DBs |
+| [`storage`](skills/storage/SKILL.md) | Persistent application volumes |
 | [`domains`](skills/domains/SKILL.md) | Custom domains and DNS verification |
-| [`projects`](skills/projects/SKILL.md) | Team context and project grouping |
+| [`projects`](skills/projects/SKILL.md) | Team context, limits, and project grouping |
+| [`billing`](skills/billing/SKILL.md) | Credits, usage, portal, and top-ups |
 
 ### MCP gaps skills respect
 
-- No database **creation** via MCP — use [cloud.seenode.com](https://cloud.seenode.com)
-- No delete tools for apps, databases, or domains
+- No delete/destroy tools for apps, databases, domains, projects, or storage (only `delete_environment_variables`)
 - No static-site / cron / blueprint / key-value product types on this MCP surface
-- Poll `get_deployments` / logs instead of a wait helper
+- Never fetch or echo raw DB passwords — use `link_database_to_application`
 
 ## Security
 
 - OAuth-only MCP config (no static secrets in manifests)
-- Skills instruct agents not to echo secret env values
+- Skills instruct agents not to echo secret env values or DB passwords
 - Vulnerability reports: see [SECURITY.md](SECURITY.md) → **help@seenode.com**
 
 ## Development

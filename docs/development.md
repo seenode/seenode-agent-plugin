@@ -35,7 +35,7 @@ The script:
 ## Editing skills
 
 - Change only `skills/<name>/` for skill content
-- Keep tool names aligned with the live Seenode MCP (see README gaps)
+- Keep tool names aligned with the platform MCP registry (see [CONTRIBUTING.md](../CONTRIBUTING.md))
 - Put long checklists under `references/`
 - Re-run `./scripts/validate.sh`
 
@@ -48,7 +48,7 @@ When bumping version, update **all** of:
 - `.codex-plugin/plugin.json`
 - `CHANGELOG.md`
 
-MCP URL must stay `https://mcp.seenode.com/mcp` in both `mcp.json` and `.mcp.json` unless intentionally changing environments (not for release).
+MCP URL must stay `https://mcp.seenode.com/mcp` in both `mcp.json` and `.mcp.json`.
 
 ## Brand assets
 
@@ -56,4 +56,4 @@ Source marks live in the Seenode website repo (`favicon.svg`, `logo-white.svg`).
 
 ## Manual tests
 
-See the testing notes in [publishing.md](publishing.md) and the verify section of the project plan: local plugin load + OAuth, Claude CLI validate, OpenAI registration, and a full mutating deploy are environment-dependent.
+See the testing notes in [publishing.md](publishing.md): local plugin load + OAuth, Claude CLI validate, OpenAI registration, and a full mutating deploy are environment-dependent.

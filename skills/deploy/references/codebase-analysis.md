@@ -1,6 +1,6 @@
 # Codebase analysis for Seenode deploys
 
-Use this checklist before calling `create_application` or `update_build_settings`. Infer from files in the repo — do not guess blindly.
+Use this checklist before calling `create_application` or `update_build_settings`. Infer from files in the repo — do not guess blindly. Prefer `inspect_repository` for remote command/env hints, then confirm against the local tree.
 
 ## 1. Language and package manager
 
@@ -13,11 +13,11 @@ Use this checklist before calling `create_application` or `update_build_settings
 | `Gemfile` | check available images; confirm with `list_images` |
 | `Dockerfile` / `docker-compose.yml` | Still deploy via Seenode runtime images unless the platform documents otherwise; use Dockerfile only as a hint for commands/port |
 
-Always call `list_images(image_type="application")` and prefer an explicit tag (`node-22`, `python-3.12`) over a floating major.
+Always call `list_images(image_type="application")` and prefer an explicit tag (`node-22`, `python-3.12`) over a floating major. Runtime ≠ env var.
 
 ## 2. Framework → build / run commands
 
-Prefer scripts already in the repo (`package.json` scripts, Makefile, Procfile, README).
+Prefer scripts already in the repo (`package.json` scripts, Makefile, Procfile, README) and hints from `inspect_repository`.
 
 ### Node / TypeScript
 
@@ -66,7 +66,8 @@ Plan:
 
 - Non-secret defaults can go in `environment_variables` on create.
 - Secrets must be listed in `secret_keys` (and never echoed).
-- Prefer asking the user for secret values rather than inventing them.
+- Prefer asking the user for non-DB secret values rather than inventing them.
+- For databases, do **not** paste passwords — use `link_database_to_application` after create.
 
 ## 6. Database signals
 
@@ -79,10 +80,10 @@ Treat as DB-needed when you see ORMs/drivers or connection URLs:
 
 Engine choice:
 
-- Clear MySQL / `mysql2` / MariaDB → MySQL in dashboard
-- Otherwise default **PostgreSQL** for typical Node/Python apps unless the user specifies
+- Clear MySQL / `mysql2` / MariaDB → `database_type="mysql"`
+- Otherwise default **`postgresql`** (not `postgres`) unless the user specifies
 
-**MCP cannot create databases.** Direct the user to [cloud.seenode.com](https://cloud.seenode.com), then wire credentials they supply.
+Create with `create_database`, poll `get_database_state`, then `link_database_to_application`. Never teach dashboard password copy-paste as the primary path.
 
 ## 7. Application type
 
@@ -102,4 +103,4 @@ Before `create_application`, be able to state:
 4. Exact `build_command` and `run_command`
 5. `root_directory` if not repo root
 6. Env keys to set (names) and which are secrets
-7. Whether a dashboard-created DB is required first
+7. Whether a managed DB will be created/reused and linked (not password-pasted)

@@ -44,6 +44,6 @@ Blocked until Seenode has a real app / connector ID:
 
 ## Post-publish smoke (mutating — optional, staging team)
 
-- [ ] Scenario A: deploy a small test repo (`create_application`) with user approval
+- [ ] Scenario A: deploy a small test repo (`create_application`) with user approval; optionally `create_database` → `link_database_to_application` → `wait_for_deployment`
 - [ ] Confirm `*.seenode.app` URL and `SUCCESSFUL` deployment
-- [ ] Tear down test resources in the dashboard (no delete tools via MCP)
+- [ ] Tear down test resources in the dashboard (destroy remains dashboard-only — no delete tools via MCP)
