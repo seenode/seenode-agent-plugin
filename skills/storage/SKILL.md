@@ -4,7 +4,7 @@ description: Manage persistent storage volumes on Seenode applications — list 
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.0"
+  version: "0.2.2"
   category: storage
 ---
 

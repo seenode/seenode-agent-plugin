@@ -4,7 +4,7 @@ description: Discover and manage Seenode web, worker, and private applications â
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.0"
+  version: "0.2.2"
   category: applications
 ---
 

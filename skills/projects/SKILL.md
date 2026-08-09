@@ -4,7 +4,7 @@ description: Work with Seenode team context and optional project grouping — li
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.0"
+  version: "0.2.2"
   category: organization
 ---
 

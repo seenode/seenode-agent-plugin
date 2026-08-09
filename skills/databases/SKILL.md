@@ -4,7 +4,7 @@ description: Create, inspect, update, rotate, and link Seenode MySQL/PostgreSQL 
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.0"
+  version: "0.2.2"
   category: databases
 ---
 

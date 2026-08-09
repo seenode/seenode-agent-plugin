@@ -4,7 +4,7 @@ description: Diagnose failed Seenode deployments and apps that will not start â€
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.0"
+  version: "0.2.2"
   category: debugging
 ---
 

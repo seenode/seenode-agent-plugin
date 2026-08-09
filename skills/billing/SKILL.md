@@ -4,7 +4,7 @@ description: Inspect Seenode team credits, usage, spending, orders, and ledger; 
 license: MIT
 metadata:
   author: Seenode
-  version: "0.3.0"
+  version: "0.2.2"
   category: billing
 ---
 

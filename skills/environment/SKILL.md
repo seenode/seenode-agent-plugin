@@ -4,7 +4,7 @@ description: Manage Seenode application environment variables and secrets — li
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.0"
+  version: "0.2.2"
   category: configuration
 ---
 

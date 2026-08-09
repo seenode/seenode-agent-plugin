@@ -1,6 +1,6 @@
 {
   "name": "seenode",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Deploy, troubleshoot, and manage applications, databases, storage, domains, projects, and billing on Seenode via the hosted Seenode MCP.",
   "author": {
     "name": "Seenode",

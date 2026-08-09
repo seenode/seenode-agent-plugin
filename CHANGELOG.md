@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-08-09
+
+### Changed
+
+- Docs point account setup at `seenode.com/dashboard` (replacing `cloud.seenode.com`)
+- Align package and skill `metadata.version` fields to `0.2.2` (fixes billing skill left at `0.3.0`)
+
 ## [0.2.1] - 2026-08-09
 
 ### Changed
