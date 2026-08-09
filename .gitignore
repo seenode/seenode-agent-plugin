@@ -1,0 +1,18 @@
+.DS_Store
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+*.log
+.tmp/
+.tmp-*/
+.app.json
+# Local tooling
+/tmp/

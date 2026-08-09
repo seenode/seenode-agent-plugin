@@ -1,0 +1,8 @@
+{
+  "apps": {
+    "seenode": {
+      "id": "plugin_asdk_app_REPLACE_ME",
+      "required": true
+    }
+  }
+}

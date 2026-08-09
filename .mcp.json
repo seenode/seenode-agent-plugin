@@ -1,0 +1,6 @@
+{
+  "seenode": {
+    "type": "http",
+    "url": "https://mcp.seenode.com/mcp"
+  }
+}

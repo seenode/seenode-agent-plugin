@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "seenode",
+  "version": "0.1.0",
+  "description": "Deploy, troubleshoot, and manage applications, databases, domains, and projects on Seenode via the hosted Seenode MCP.",
+  "author": {
+    "name": "Seenode",
+    "email": "help@seenode.com",
+    "url": "https://seenode.com"
+  },
+  "homepage": "https://seenode.com",
+  "repository": "https://github.com/seenode/seenode-agent-plugin",
+  "license": "MIT",
+  "keywords": [
+    "seenode",
+    "deploy",
+    "hosting",
+    "mcp",
+    "applications",
+    "databases",
+    "domains"
+  ]
+}

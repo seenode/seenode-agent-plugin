@@ -1,0 +1,48 @@
+{
+  "name": "seenode",
+  "version": "0.1.0",
+  "description": "Deploy, troubleshoot, and manage applications, databases, domains, and projects on Seenode via the hosted Seenode MCP.",
+  "author": {
+    "name": "Seenode",
+    "email": "help@seenode.com",
+    "url": "https://seenode.com"
+  },
+  "homepage": "https://seenode.com",
+  "repository": "https://github.com/seenode/seenode-agent-plugin",
+  "license": "MIT",
+  "keywords": [
+    "seenode",
+    "deploy",
+    "hosting",
+    "mcp",
+    "applications",
+    "databases",
+    "domains"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Seenode",
+    "shortDescription": "Deploy and manage apps on Seenode",
+    "longDescription": "Connect ChatGPT and Codex to Seenode to deploy GitHub/GitLab apps, inspect logs and metrics, manage environment variables, attach custom domains, and work with existing MySQL/PostgreSQL databases. Authentication uses OAuth against the hosted Seenode MCP — no API keys in plugin config.",
+    "developerName": "Seenode",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://seenode.com",
+    "privacyPolicyURL": "https://seenode.com/legal/privacy-policy",
+    "termsOfServiceURL": "https://seenode.com/legal/terms-and-conditions",
+    "defaultPrompt": [
+      "Deploy this repository to Seenode as a web app",
+      "Why did my latest Seenode deployment fail?",
+      "List my Seenode applications and their deploy status",
+      "Add a custom domain to my Seenode web app and show DNS records"
+    ],
+    "logo": "./assets/logo.png",
+    "composerIcon": "./assets/icon.png",
+    "brandColor": "#151827",
+    "screenshots": []
+  }
+}
