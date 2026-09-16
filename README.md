@@ -8,7 +8,7 @@ This repository is a **portable Agent Plugin**: shared skills plus thin client a
 
 Use this plugin when you want an AI coding agent to:
 
-- Deploy a GitHub or GitLab repo to Seenode as a web, worker, or private app
+- Deploy a GitHub or GitLab repo to Seenode as a web, worker, private, or static app
 - Create and link managed MySQL/PostgreSQL databases (without pasting passwords)
 - Debug failed builds and runtime crashes with logs, metrics, wait/cancel helpers
 - Manage environment variables, custom domains, projects, storage volumes, and billing/credits
@@ -38,6 +38,7 @@ After install, complete Seenode OAuth when prompted, then try a read-only smoke 
 ## Example prompts
 
 - “Deploy this repository to Seenode as a web app.”
+- “Deploy this Vite SPA to Seenode as a static site.”
 - “Create a PostgreSQL database, wait until it’s ready, and link it to my app.”
 - “Why did my latest Seenode deployment fail? Wait for the next deploy after you fix it.”
 - “What’s my Seenode credit balance in USD?”
@@ -50,7 +51,7 @@ After install, complete Seenode OAuth when prompted, then try a read-only smoke 
 |-------|---------|
 | [`deploy`](skills/deploy/SKILL.md) | End-to-end deploy: DB → inspect → app → link → wait |
 | [`troubleshoot`](skills/troubleshoot/SKILL.md) | Failed deploys and apps that won’t start |
-| [`applications`](skills/applications/SKILL.md) | Discover and manage web/worker/private apps |
+| [`applications`](skills/applications/SKILL.md) | Discover and manage web/worker/private/static apps |
 | [`environment`](skills/environment/SKILL.md) | Env vars and secrets (prefer DB link over paste) |
 | [`databases`](skills/databases/SKILL.md) | Create, update, rotate, and link managed DBs |
 | [`storage`](skills/storage/SKILL.md) | Persistent application volumes |
@@ -61,7 +62,6 @@ After install, complete Seenode OAuth when prompted, then try a read-only smoke 
 ### MCP gaps skills respect
 
 - No delete/destroy tools for apps, databases, domains, projects, or storage (only `delete_environment_variables`)
-- No static-site / cron / blueprint / key-value product types on this MCP surface
 - Never fetch or echo raw DB passwords — use `link_database_to_application`
 
 ## Security

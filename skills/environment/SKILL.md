@@ -4,7 +4,7 @@ description: Manage Seenode application environment variables and secrets — li
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.2"
+  version: "0.3.0"
   category: configuration
 ---
 
@@ -12,9 +12,10 @@ metadata:
 
 ## Semantics (critical)
 
-- **Set/delete env vars** applies config to the **running** application and **restarts** instances.
-- Env changes do **not** rebuild from git.
-- Changing runtime image, build/start command, port, root directory, or branch requires **`update_build_settings`** (redeploy), not env vars.
+- **Set/delete env vars** on container apps applies config to the **running** application and **restarts** instances.
+- Env changes do **not** rebuild from git for web/worker/private.
+- **Static:** env is **build-time**. `set_environment_variables` does not restart a container — follow with `create_deployment` / `wait_for_deployment`.
+- Changing runtime image, build/start command, port, root directory, publish directory, or branch requires **`update_build_settings`** (redeploy), not env vars.
 - Secrets marked via `secret_keys` are write-only — they cannot be read back.
 - For managed databases, prefer **`link_database_to_application`** over pasting `DATABASE_URL` / `DB_PASSWORD` into `set_environment_variables`.
 

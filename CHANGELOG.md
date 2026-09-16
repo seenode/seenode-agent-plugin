@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-11
+
+### Added
+
+- Static sites as a first-class MCP product type (`application_type='static'`)
+- Static deploy recipe: `inspect_repository` → `create_application` with `publish_directory` → `wait_for_deployment` (no database, run command, or port)
+
+### Changed
+
+- Skills and docs stop claiming static is not a product type
+- Custom domains apply to **web and static**
+- Static env vars are build-time — follow `set_environment_variables` with `create_deployment`
+- Storage, restart, scale, and runtime metrics are documented as unsupported for static
+- `update_build_settings` can change `publish_directory`; `update_application` can set `static_routes` / `static_headers`
+
 ## [0.2.2] - 2026-08-09
 
 ### Changed

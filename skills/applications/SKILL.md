@@ -1,10 +1,10 @@
 ---
 name: applications
-description: Discover and manage Seenode web, worker, and private applications — list/get apps, packages, build settings, restart/duplicate, scale, and trigger deployments. Use when the user asks about their Seenode apps, runtimes, build/start commands, ports, auto-deploy, or redeploys.
+description: Discover and manage Seenode web, worker, private, and static applications — list/get apps, packages, build settings, restart/duplicate, scale, and trigger deployments. Use when the user asks about their Seenode apps, runtimes, build/start commands, ports, publish directory, auto-deploy, or redeploys.
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.2"
+  version: "0.3.0"
   category: applications
 ---
 
@@ -12,19 +12,21 @@ metadata:
 
 ## Types
 
-| Type | Public URL | Custom domains | Port |
-|------|------------|----------------|------|
-| `web` | Yes (`*.seenode.app`) | Yes | Required |
-| `worker` | No | No | Usually omit |
-| `private` | No (internal only) | No | Required |
+| Type | Public URL | Custom domains | Port | Notes |
+|------|------------|----------------|------|-------|
+| `web` | Yes (`*.seenode.app`) | Yes | Required | Container |
+| `worker` | No | No | Usually omit | Container |
+| `private` | No (internal only) | No | Required | Container |
+| `static` | Yes (`*.seenode.app`) | Yes | Omit | Git build → object storage; `publish_directory` required; no restart/scale/storage |
 
-`list_applications` filters by type and defaults to `web`. Call again with `worker` / `private` when needed — there is no all-types list.
+`list_applications` filters by type and defaults to `web`. Call again with `worker` / `private` / `static` when needed — there is no all-types list.
 
 ## Discovery
 
 ```
 get_current_team()
 list_applications(application_type="web", project_id=null, page=1)
+list_applications(application_type="static")
 get_application(application_id=...)
 get_build_settings(application_id=...)
 get_deployments(application_id=...)
@@ -44,12 +46,14 @@ update_application(
   description=null,
   project_id=null,
   package_id=null,    # paid tier from list_application_packages — needs credit approval
-  scale=null,         # 1–10 instance multiplier; must be 1 when storage is attached
-  auto_deploy=null    # deploy-on-push toggle
+  scale=null,         # 1–10 instance multiplier; must be 1 when storage is attached; not for static
+  auto_deploy=null,   # deploy-on-push toggle
+  static_routes=null, # static only: [{type: redirect|rewrite, source, destination}]
+  static_headers=null # static only: [{path, name, value}]
 )
 ```
 
-Build/run commands, runtime image, port, root directory, and git branch are **not** here — use `update_build_settings`. Package ≠ runtime.
+Build/run commands, runtime image, port, root directory, publish directory, and git branch are **not** here — use `update_build_settings`. Package ≠ runtime. Static routes/headers **are** here.
 
 ## Update build settings (redeploys)
 
@@ -60,14 +64,15 @@ update_build_settings(
   run_command=null,
   image_id=null,        # from list_images
   root_directory=null,
+  publish_directory=null,  # static only
   port=null,
   git_branch=null
 )
 ```
 
-Side effect: starts a new build/deployment immediately. Prefer `wait_for_deployment` afterwards; use `get_application_logs` on failure.
+Side effect: starts a new build/deployment immediately. Prefer `wait_for_deployment` afterwards; use `get_application_logs` on failure. Static: pass `build_command` + `publish_directory`; omit `run_command` / `port`.
 
-Runtime changes mean changing `image_id` / creating with `runtime` — never via env vars named `RUNTIME`.
+Runtime changes mean changing `image_id` / creating with `runtime` — never via env vars named `RUNTIME`. Static `runtime` / `image_id` is the **build container** (default Node 22).
 
 ## Restart (no rebuild)
 
@@ -75,7 +80,7 @@ Runtime changes mean changing `image_id` / creating with `runtime` — never via
 restart_application(application_id=...)
 ```
 
-Restarts running instances without rebuilding from git. Requires at least one prior successful deployment. Env-var changes already trigger a similar restart.
+Restarts running instances without rebuilding from git. Requires at least one prior successful deployment. Env-var changes already trigger a similar restart. **Not supported for static** (API 400 — no running instances).
 
 ## Duplicate
 
@@ -96,11 +101,11 @@ Omit `git_commit_sha` for the newest commit on the configured branch; pass a SHA
 
 ## Create
 
-Prefer the **deploy** skill for new apps (`create_application`, optional `create_database` → `link_database_to_application`). Require pushed GitHub/GitLab repo + connected provider (`get_git_connections`). Use `inspect_repository` when build/run hints are unclear.
+Prefer the **deploy** skill for new apps (`create_application`, optional `create_database` → `link_database_to_application`). Require pushed GitHub/GitLab repo + connected provider (`get_git_connections`). Use `inspect_repository` when build/run hints are unclear. Static: `application_type="static"` with `publish_directory` (and optional `client_side_routing`); skip DB/run/port.
 
 ## Storage
 
-Persistent volumes: see the **storage** skill (`list_application_storage`, `create_application_storage`, …). Size tiers come from `list_storage_packages`.
+Persistent volumes: see the **storage** skill (`list_application_storage`, `create_application_storage`, …). Size tiers come from `list_storage_packages`. **Not supported for static** (API 400).
 
 ## Safety
 

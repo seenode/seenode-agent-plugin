@@ -25,8 +25,8 @@ Prefer scripts already in the repo (`package.json` scripts, Makefile, Procfile, 
 |-------------------|---------------|-------------|
 | Next.js (`next`) | `npm ci && npm run build` | `npm start` (or `npx next start`) |
 | Nest / Express / Fastify | `npm ci && npm run build` if `dist/` needed | `npm start` or `node dist/main.js` |
-| Vite SPA + separate API | Deploy the **server** as web; static-only sites are not a Seenode product type via MCP — serve via the app or document the limitation |
-| Remix / Nuxt / SvelteKit | Use framework start script after build | framework `start` |
+| Vite SPA / static export with no backend | `npm ci && npm run build` | n/a — `application_type='static'` + `publish_directory` |
+| Remix / Nuxt / SvelteKit (SSR / Node server) | Use framework start script after build | framework `start` |
 
 Install command must match the lockfile: `npm ci`, `pnpm i --frozen-lockfile`, `yarn install --frozen-lockfile`, or `bun install --frozen-lockfile`.
 
@@ -89,7 +89,8 @@ Create with `create_database`, poll `get_database_state`, then `link_database_to
 
 | Need | Type |
 |------|------|
-| Public HTTP API or website | `web` |
+| Public HTTP API or website with a server | `web` |
+| Vite/SPA/static export, no Node server | `static` (`publish_directory`, optional `client_side_routing`) |
 | Queue consumer / sidekiq / bull worker | `worker` |
 | Internal-only service | `private` |
 
@@ -98,9 +99,9 @@ Create with `create_database`, poll `get_database_state`, then `link_database_to
 Before `create_application`, be able to state:
 
 1. Repo + provider + branch
-2. `application_type` + port (if any)
-3. `runtime` or `image_id`
-4. Exact `build_command` and `run_command`
+2. `application_type` + port (if any) or `publish_directory` (static)
+3. `runtime` or `image_id` (optional for static — build container defaults to Node 22)
+4. Exact `build_command` and `run_command` (omit `run_command` for static)
 5. `root_directory` if not repo root
 6. Env keys to set (names) and which are secrets
-7. Whether a managed DB will be created/reused and linked (not password-pasted)
+7. Whether a managed DB will be created/reused and linked (not password-pasted; skip for static)

@@ -30,7 +30,7 @@ Or for managed DBs:
 link_database_to_application(application_id=..., database_id=..., overwrite=true)
 ```
 
-Env updates restart instances; they do not rebuild. If the app needs a new build artifact, follow with `create_deployment` / `wait_for_deployment`.
+Env updates restart instances; they do not rebuild. If the app needs a new build artifact, follow with `create_deployment` / `wait_for_deployment`. **Static:** env is always build-time — always follow with `create_deployment`.
 
 ## PORT_BINDING
 
@@ -76,7 +76,7 @@ get_database_metrics(database_id=..., metric_type="connections")
 
 **Signals:** build succeeds, runtime exits immediately, `npm start` missing script, wrong module path (`dist/main` missing).
 
-**Fix:** Correct `run_command` (and build output paths) via `update_build_settings`. Ensure build actually emits the files the start command expects. If settings look correct but the process is wedged, try `restart_application`.
+**Fix:** Correct `run_command` (and build output paths) via `update_build_settings`. Ensure build actually emits the files the start command expects. If settings look correct but the process is wedged, try `restart_application` (not for static).
 
 ## OUT_OF_MEMORY
 
@@ -115,6 +115,26 @@ get_application_metrics(application_id=..., metric_type="memory", range_hours=1)
 **Signals:** deployment stays `NEW`/`RUNNING` far too long; user wants to abort.
 
 **Fix:** `cancel_deployment(application_id=..., deployment_uuid=...)` then investigate logs and redeploy with `create_deployment` / `wait_for_deployment` if appropriate.
+
+## STATIC_PUBLISH_DIR
+
+**Signals:** empty publish directory after SUCCESSFUL deploy, origin 404s for every path, build logs say no files uploaded.
+
+**Checks:** `get_build_settings` → `publishDirectory`. Confirm the build emits that folder relative to `rootDirectory`.
+
+**Fix:** `update_build_settings(..., publish_directory="<correct>")` then `wait_for_deployment`.
+
+## STATIC_SPA_REWRITE
+
+**Signals:** `/` works but client-side routes 404 on refresh; deep links fail.
+
+**Fix:** `update_application` with `static_routes=[{type:"rewrite", source:"/*", destination:"/index.html"}]` (no rebuild), or create with `client_side_routing=true`.
+
+## STATIC_NO_CONTAINER
+
+**Signals:** `restart_application`, storage, scale, or application metrics return 400.
+
+**Fix:** Do not restart a static site. Env changes need `create_deployment`. Storage/scale/runtime metrics are unsupported.
 
 ## Fix budget
 

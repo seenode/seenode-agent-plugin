@@ -1,18 +1,18 @@
 ---
 name: domains
-description: Attach and update custom domains on Seenode web applications, show DNS records, and poll verification until DNS/TLS/routing are ready. Use when the user wants a custom domain, DNS setup, SSL status, default-domain changes, or to check if a domain is live on Seenode.
+description: Attach and update custom domains on Seenode web and static applications, show DNS records, and poll verification until DNS/TLS/routing are ready. Use when the user wants a custom domain, DNS setup, SSL status, default-domain changes, or to check if a domain is live on Seenode.
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.2"
+  version: "0.3.0"
   category: networking
 ---
 
 # Custom domains on Seenode
 
-Only **`web`** applications support custom domains. Workers and private apps do not.
+Only **`web` and `static`** applications support custom domains. Workers and private apps do not.
 
-Web apps already receive a default `*.seenode.app` domain on creation — use this skill for **custom** domains.
+Web and static apps already receive a default `*.seenode.app` domain on creation — use this skill for **custom** domains.
 
 ## List current domains
 
