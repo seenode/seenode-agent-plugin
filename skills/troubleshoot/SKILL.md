@@ -4,7 +4,7 @@ description: Diagnose failed Seenode deployments and apps that will not start �
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.2"
+  version: "0.3.0"
   category: debugging
 ---
 
@@ -16,7 +16,7 @@ Identify the failing application, read deployment state and logs, classify the f
 
 ```
 get_current_team()
-list_applications(application_type="web")   # also try worker / private
+list_applications(application_type="web")   # also try worker / private / static
 ```
 
 If MCP auth fails, complete Seenode OAuth and retry.
@@ -26,7 +26,7 @@ If MCP auth fails, complete Seenode OAuth and retry.
 ### 1. Identify the application
 
 ```
-list_applications(application_type="web"|"worker"|"private")
+list_applications(application_type="web"|"worker"|"private"|"static")
 get_application(application_id=...)
 get_build_settings(application_id=...)
 ```
@@ -79,8 +79,9 @@ Match against [references/error-patterns.md](references/error-patterns.md). Comm
 - Port binding (`127.0.0.1` only, wrong port)
 - Build command / dependency failures
 - Database connection (re-link, do not paste passwords)
-- OOM / high memory (metrics)
+- OOM / high memory (metrics) — not for static (no containers)
 - Wrong runtime image
+- Static: empty publish directory, missing SPA rewrite, `restart_application` 400
 
 ### 5. Check metrics when relevant
 
@@ -88,6 +89,8 @@ Match against [references/error-patterns.md](references/error-patterns.md). Comm
 get_application_metrics(application_id=..., metric_type="memory", range_hours=1)
 get_application_metrics(application_id=..., metric_type="cpu", range_hours=1)
 ```
+
+Skip application metrics for **static** sites (no running containers).
 
 For DB-related issues:
 
@@ -111,12 +114,13 @@ Prefer masked listing. Use `reveal_environment_variables` only when the user exp
 | Class | Fix tool |
 |-------|----------|
 | Runtime / build / start / port / branch / root dir | `update_build_settings` (triggers redeploy) |
-| Missing or wrong non-DB env | `set_environment_variables` (restarts; no git rebuild) |
+| Missing or wrong non-DB env | `set_environment_variables` (containers restart; static: follow with `create_deployment`) |
 | DB credentials / after password rotate | `link_database_to_application(..., overwrite=true)` |
 | Remove bad keys | `delete_environment_variables` |
-| Process needs fresh start (no rebuild) | `restart_application` |
+| Process needs fresh start (no rebuild) | `restart_application` (**not for static**) |
 | Code bug | Fix locally → commit/push → `create_deployment` |
-| Metadata / scale / auto_deploy / package | `update_application` |
+| Metadata / scale / auto_deploy / package | `update_application` (scale/package not for static) |
+| Static routes/headers (SPA rewrite, redirects) | `update_application(..., static_routes=, static_headers=)` |
 | Stuck in-progress deploy | `cancel_deployment` then redeploy if needed |
 
 Carry forward omitted build-settings fields — the API replaces the whole record; the MCP tool carries forward omissions when used correctly.

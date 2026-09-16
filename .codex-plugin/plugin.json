@@ -1,7 +1,7 @@
 {
   "name": "seenode",
-  "version": "0.2.2",
-  "description": "Deploy, troubleshoot, and manage applications, databases, storage, domains, projects, and billing on Seenode via the hosted Seenode MCP.",
+  "version": "0.3.0",
+  "description": "Deploy, troubleshoot, and manage static sites, web/worker/private applications, databases, storage, domains, projects, and billing on Seenode via the hosted Seenode MCP.",
   "author": {
     "name": "Seenode",
     "email": "help@seenode.com",
@@ -16,6 +16,7 @@
     "hosting",
     "mcp",
     "applications",
+    "static-sites",
     "databases",
     "storage",
     "billing",
@@ -26,7 +27,7 @@
   "interface": {
     "displayName": "Seenode",
     "shortDescription": "Deploy and manage apps on Seenode",
-    "longDescription": "Connect ChatGPT and Codex to Seenode to deploy GitHub/GitLab apps, create and link MySQL/PostgreSQL databases, wait on deployments, inspect logs and metrics, manage environment variables and storage, attach custom domains, and check credits/billing. Authentication uses OAuth against the hosted Seenode MCP — no API keys in plugin config.",
+    "longDescription": "Connect ChatGPT and Codex to Seenode to deploy GitHub/GitLab apps including static sites, create and link MySQL/PostgreSQL databases, wait on deployments, inspect logs and metrics, manage environment variables and storage, attach custom domains, and check credits/billing. Authentication uses OAuth against the hosted Seenode MCP — no API keys in plugin config.",
     "developerName": "Seenode",
     "category": "Developer Tools",
     "capabilities": [
@@ -38,6 +39,7 @@
     "termsOfServiceURL": "https://seenode.com/legal/terms-and-conditions",
     "defaultPrompt": [
       "Deploy this repository to Seenode as a web app",
+      "Deploy this Vite SPA to Seenode as a static site",
       "Create a PostgreSQL database and link it to my Seenode app",
       "Why did my latest Seenode deployment fail?",
       "What is my Seenode credit balance?",

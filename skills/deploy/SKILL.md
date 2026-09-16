@@ -1,10 +1,10 @@
 ---
 name: deploy
-description: Deploy a GitHub or GitLab repository to Seenode end-to-end — preflight credits/team, create or reuse a database, inspect the repo, create a web/worker/private application, link the DB, wait for deployment, and return the *.seenode.app URL. Use when the user wants to deploy, host, publish, or ship an app on Seenode.
+description: Deploy a GitHub or GitLab repository to Seenode end-to-end — preflight credits/team, create or reuse a database when needed, inspect the repo, create a web/worker/private/static application, link the DB, wait for deployment, and return the *.seenode.app URL. Use when the user wants to deploy, host, publish, or ship an app on Seenode.
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.2"
+  version: "0.3.0"
   category: deployment
 ---
 
@@ -19,6 +19,7 @@ Seenode hosts:
 - **web** — public HTTP; gets a default `*.seenode.app` domain
 - **worker** — background process; no public URL
 - **private** — internal network only; no public URL / custom domains
+- **static** — git build → object storage; free Static package; default `*.seenode.app` domain; no container
 - **MySQL / PostgreSQL** — managed databases (`database_type` is `mysql` or `postgresql`, never `postgres`)
 
 Apps deploy from **GitHub** or **GitLab**. Team context comes from the OAuth token — call `get_current_team` when you need to confirm where resources will land.
@@ -33,12 +34,20 @@ create_project? → create_database → poll get_database_state
 
 Check `get_credit_balance` before paid creates. Quote `pricePerMonthUsd` / `creditBalanceUsd` only (never DIY cents→dollars).
 
+Static-only shortcut (no DB):
+
+```text
+inspect_repository → create_application(application_type="static",
+  build_command, publish_directory, client_side_routing?)
+  → wait_for_deployment → add_domain
+```
+
 ### MCP capability gaps (do not invent workarounds)
 
 | Gap | What to do |
 |-----|------------|
 | No delete app/DB/domain/project/storage | Do not claim you can delete; send destructive cleanup to the dashboard. |
-| No static-site / cron / blueprint / key-value product types | Stay within web/worker/private + managed DBs (+ optional app storage). |
+| No cron / blueprint / key-value product types | Stay within web/worker/private/static + managed DBs (+ optional app storage on containers). |
 
 ## Prerequisites
 
@@ -56,6 +65,7 @@ get_team_limits()
 get_team_services_brief()
 get_credit_balance()
 list_applications(application_type="web")
+list_applications(application_type="static")
 ```
 
 Optional project grouping: `list_projects` / `create_project` (see **projects** skill). Package upgrades and paid creates consume credit — confirm with the user when balance is low.
@@ -93,7 +103,7 @@ Prefer explicit tags such as `node-22`, `python-3.12` (pass as `runtime` string)
 
 ### 5. Database (if needed)
 
-If the app needs a DB:
+Skip this step for **static** sites (no server, no DB link). If a container app needs a DB:
 
 1. `list_databases` — reuse an existing team DB when appropriate (`get_database` / `get_database_state`).
 2. To create:
@@ -120,7 +130,9 @@ get_database_state(database_id=...)
 
 ### 6. Propose one plan, then create the application
 
-Summarize for approval: app type, repo/branch, runtime, build/run commands, port, env keys (names only), DB plan, optional storage. Then:
+Summarize for approval: app type, repo/branch, runtime, build/run commands (or publish directory), port, env keys (names only), DB plan, optional storage. Then:
+
+**Web / worker / private:**
 
 ```
 create_application(
@@ -141,11 +153,34 @@ create_application(
 )
 ```
 
-For an existing app: `get_application` → `update_build_settings` and/or `set_environment_variables` → `create_deployment` / `wait_for_deployment` as needed.
+**Static** (Vite/SPA with `commands.publishDirectory` and no start command, or the user asked for a static site). No database, run command, or port. Optional `runtime` / `image_id` selects the **build container** (defaults to Node 22):
 
-Optional persistent volume (scale must be 1): see **storage** skill (`list_storage_packages`, `create_application_storage`).
+```
+create_application(
+  git_repository="owner/repo",
+  git_provider="github"|"gitlab",
+  git_branch="<branch>|null",
+  application_type="static",
+  build_command="npm run build",
+  publish_directory="dist",
+  client_side_routing=true,   # SPA rewrite /* → /index.html
+  root_directory=null,
+  environment_variables={...},
+  secret_keys=["..."],
+  project_id=null|<id>,
+  custom_name=null|"..."
+)
+```
+
+Do **not** deploy a static SPA as `type=web` with a dummy `run_command`.
+
+For an existing app: `get_application` → `update_build_settings` (static: `publish_directory`, no `run_command`/`port`) and/or `set_environment_variables` → `create_deployment` / `wait_for_deployment`. Static env is **build-time** — always follow env changes with `create_deployment`. `update_application` can set `static_routes` / `static_headers` (no rebuild).
+
+Optional persistent volume (scale must be 1; **not for static**): see **storage** skill (`list_storage_packages`, `create_application_storage`).
 
 ### 7. Link the database (never paste passwords)
+
+Skip for static. For container apps:
 
 ```
 link_database_to_application(
@@ -185,7 +220,7 @@ Fix with the right tool (`update_build_settings`, `set_environment_variables`, `
 
 ### 9. Optional custom domain
 
-For `web` apps only — use the **domains** skill (`add_domain`, `check_domain_status`).
+For `web` and `static` apps — use the **domains** skill (`add_domain`, `check_domain_status`).
 
 ### 10. Report success
 
@@ -195,7 +230,8 @@ On `SUCCESSFUL`, summarize with a markdown link to the default domain, e.g. [Ope
 
 - Runtime ≠ env var → `list_images` / create `runtime` / `update_build_settings`
 - Package ≠ runtime → `list_application_packages` / `list_database_packages` + `update_application` / `update_database`
-- Env changes **restart**; build-settings / `create_deployment` **rebuild**
+- Env changes **restart** containers; build-settings / `create_deployment` **rebuild**
+- Static env is **build-time** — `set_environment_variables` does not restart a container; follow with `create_deployment`
 - Speak credits and spend via `*Usd` fields only (`creditBalanceUsd`, `pricePerMonthUsd`; **billing** skill)
 
 ## Safety
@@ -204,7 +240,7 @@ On `SUCCESSFUL`, summarize with a markdown link to the default domain, e.g. [Ope
 - Preserve MCP approval prompts — do not bypass user consent.
 - Never delete production resources via MCP (unsupported); never invent credentials.
 - Never paste secret env or DB password values into chat; say they were set or linked.
-- Env-var changes **restart** instances; they do **not** rebuild from git. Build/runtime/port/command changes use `update_build_settings` and **do** redeploy.
+- Env-var changes **restart** container instances; they do **not** rebuild from git. Build/runtime/port/command changes use `update_build_settings` and **do** redeploy. Static: env changes need `create_deployment`.
 
 ## Relevant tools
 

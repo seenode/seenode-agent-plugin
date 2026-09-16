@@ -4,13 +4,13 @@ description: Manage persistent storage volumes on Seenode applications — list 
 license: MIT
 metadata:
   author: Seenode
-  version: "0.2.2"
+  version: "0.3.0"
   category: storage
 ---
 
 # Application storage on Seenode
 
-Persistent volumes attach to a single application. Apps may have **at most one** active volume. Scale must be **1** when storage is attached.
+Persistent volumes attach to a single **container** application. Apps may have **at most one** active volume. Scale must be **1** when storage is attached. **Not supported for `type=static`** (API 400 — no container mount).
 
 ## Discover packages and volumes
 
@@ -64,6 +64,7 @@ Use for capacity pressure while troubleshooting disk-full symptoms.
 
 - No delete-storage tool via MCP — remove volumes in the dashboard.
 - Do not attach storage when scale > 1; do not claim shrink/downgrade is possible.
+- Do not attach storage to static sites.
 - Inspect before mutate; preserve MCP approval prompts.
 
 ## Relevant tools

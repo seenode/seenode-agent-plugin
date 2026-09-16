@@ -1,7 +1,7 @@
 {
   "name": "seenode",
-  "version": "0.2.2",
-  "description": "Deploy, troubleshoot, and manage applications, databases, storage, domains, projects, and billing on Seenode via the hosted Seenode MCP.",
+  "version": "0.3.0",
+  "description": "Deploy, troubleshoot, and manage static sites, web/worker/private applications, databases, storage, domains, projects, and billing on Seenode via the hosted Seenode MCP.",
   "author": {
     "name": "Seenode",
     "email": "help@seenode.com"
@@ -15,6 +15,7 @@
     "hosting",
     "mcp",
     "applications",
+    "static-sites",
     "databases",
     "storage",
     "billing",
