@@ -33,7 +33,7 @@ Agent client (Cursor / Claude Code / Codex)
 
 Overview: [docs/installation.md](docs/installation.md). Marketplace publishing: [docs/publishing.md](docs/publishing.md).
 
-After install, complete Seenode OAuth when prompted, then try a read-only smoke prompt such as “What is my current Seenode team?”
+After install, complete Seenode OAuth when prompted, then try a read-only smoke prompt such as “What is my current Seenode workspace?”
 
 ## Example prompts
 
@@ -56,7 +56,7 @@ After install, complete Seenode OAuth when prompted, then try a read-only smoke 
 | [`databases`](skills/databases/SKILL.md) | Create, update, rotate, and link managed DBs |
 | [`storage`](skills/storage/SKILL.md) | Persistent application volumes |
 | [`domains`](skills/domains/SKILL.md) | Custom domains and DNS verification |
-| [`projects`](skills/projects/SKILL.md) | Team context, limits, and project grouping |
+| [`projects`](skills/projects/SKILL.md) | Workspace context, limits, and project grouping |
 | [`billing`](skills/billing/SKILL.md) | Credits, usage, portal, and top-ups |
 
 ### MCP gaps skills respect

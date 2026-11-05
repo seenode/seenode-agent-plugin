@@ -24,7 +24,7 @@ metadata:
 ## Discovery
 
 ```
-get_current_team()
+get_current_workspace()
 list_applications(application_type="web", project_id=null, page=1)
 list_applications(application_type="static")
 get_application(application_id=...)

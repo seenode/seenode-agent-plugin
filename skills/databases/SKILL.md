@@ -75,7 +75,7 @@ update_database(
 )
 ```
 
-Package changes consume team credit — get explicit approval.
+Package changes consume workspace credit — get explicit approval.
 
 ## Rotate password
 

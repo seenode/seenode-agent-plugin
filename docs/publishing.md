@@ -19,7 +19,7 @@ Suggested GitHub about text:
 
 - [ ] Local install works via `~/.cursor/plugins/local/seenode` (symlink or copy)
 - [ ] OAuth completes against production MCP
-- [ ] Read-only smoke: `get_current_team` / `list_applications`
+- [ ] Read-only smoke: `get_current_workspace` / `list_applications`
 - [ ] Submit to Cursor’s plugin marketplace per current Cursor publisher docs (process is external; no automated submission from this repo)
 - [ ] Confirm marketplace listing uses portable Agent Plugin layout (no `.cursor-plugin/` required)
 
@@ -42,7 +42,7 @@ Blocked until Seenode has a real app / connector ID:
 - [ ] Install in ChatGPT and Codex; OAuth + read-only smoke
 - [ ] Only then claim end-to-end OpenAI validation in public docs
 
-## Post-publish smoke (mutating — optional, staging team)
+## Post-publish smoke (mutating — optional, staging workspace)
 
 - [ ] Scenario A: deploy a small test repo (`create_application`) with user approval; optionally `create_database` → `link_database_to_application` → `wait_for_deployment`
 - [ ] Confirm `*.seenode.app` URL and `SUCCESSFUL` deployment
