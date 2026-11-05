@@ -31,7 +31,7 @@ When using a copy, re-copy (or re-sync) after pulling updates.
 4. Smoke test:
 
 ```text
-What is my current Seenode team? Use get_current_team.
+What is my current Seenode workspace? Use get_current_workspace.
 ```
 
 ## Marketplace

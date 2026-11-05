@@ -88,13 +88,13 @@ get_database_metrics(database_id=..., metric_type="connections")
 get_application_metrics(application_id=..., metric_type="memory", range_hours=1)
 ```
 
-**Fix:** Reduce memory use in code/build; or discuss package/scale changes via `update_application` / `list_application_packages` (package changes consume team credit). Do not silently upgrade paid tiers without user approval.
+**Fix:** Reduce memory use in code/build; or discuss package/scale changes via `update_application` / `list_application_packages` (package changes consume workspace credit). Do not silently upgrade paid tiers without user approval.
 
 ## LIMITS
 
 **Signals:** deployment `state` = `LIMITS`, quota errors in API responses.
 
-**Fix:** Explain with `get_team_limits` / `get_credit_balance` / **billing** skill. Do not invent credits.
+**Fix:** Explain with `get_workspace_limits` / `get_credit_balance` / **billing** skill. Do not invent credits.
 
 ## HEALTH / HTTP 5xx AFTER SUCCESSFUL DEPLOY
 

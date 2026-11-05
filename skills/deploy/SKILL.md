@@ -1,6 +1,6 @@
 ---
 name: deploy
-description: Deploy a GitHub or GitLab repository to Seenode end-to-end — preflight credits/team, create or reuse a database when needed, inspect the repo, create a web/worker/private/static application, link the DB, wait for deployment, and return the *.seenode.app URL. Use when the user wants to deploy, host, publish, or ship an app on Seenode.
+description: Deploy a GitHub or GitLab repository to Seenode end-to-end — preflight credits/workspace, create or reuse a database when needed, inspect the repo, create a web/worker/private/static application, link the DB, wait for deployment, and return the *.seenode.app URL. Use when the user wants to deploy, host, publish, or ship an app on Seenode.
 license: MIT
 metadata:
   author: Seenode
@@ -22,7 +22,7 @@ Seenode hosts:
 - **static** — git build → object storage; free Static package; default `*.seenode.app` domain; no container
 - **MySQL / PostgreSQL** — managed databases (`database_type` is `mysql` or `postgresql`, never `postgres`)
 
-Apps deploy from **GitHub** or **GitLab**. Team context comes from the OAuth token — call `get_current_team` when you need to confirm where resources will land.
+Apps deploy from **GitHub** or **GitLab**. Workspace context comes from the OAuth token — call `get_current_workspace` when you need to confirm where resources will land. The response object is `workspace`.
 
 ### Flagship recipe
 
@@ -51,18 +51,18 @@ inspect_repository → create_application(application_type="static",
 
 ## Prerequisites
 
-1. **MCP auth** — Call read-only `get_current_team` or `list_applications`. If auth fails, ask the user to complete Seenode OAuth for the plugin, then retry.
+1. **MCP auth** — Call read-only `get_current_workspace` or `list_applications`. If auth fails, ask the user to complete Seenode OAuth for the plugin, then retry.
 2. **Git remote pushed** — `git remote -v` and ensure the branch is on GitHub/GitLab. Seenode does not create repos or push code.
 3. **Git provider connected** — `get_git_connections`. If a provider is disconnected, `connect_git_provider` → show `authorizationUrl` for the user to open → re-check with `get_git_connections`.
 
 ## Workflow
 
-### 1. Confirm team, limits, and credits
+### 1. Confirm workspace, limits, and credits
 
 ```
-get_current_team()
-get_team_limits()
-get_team_services_brief()
+get_current_workspace()
+get_workspace_limits()
+get_workspace_services_brief()
 get_credit_balance()
 list_applications(application_type="web")
 list_applications(application_type="static")
@@ -105,7 +105,7 @@ Prefer explicit tags such as `node-22`, `python-3.12` (pass as `runtime` string)
 
 Skip this step for **static** sites (no server, no DB link). If a container app needs a DB:
 
-1. `list_databases` — reuse an existing team DB when appropriate (`get_database` / `get_database_state`).
+1. `list_databases` — reuse an existing workspace DB when appropriate (`get_database` / `get_database_state`).
 2. To create:
 
 ```
@@ -244,7 +244,7 @@ On `SUCCESSFUL`, summarize with a markdown link to the default domain, e.g. [Ope
 
 ## Relevant tools
 
-`get_current_team`, `get_team_limits`, `get_team_services_brief`, `get_credit_balance`, `list_projects`, `create_project`, `get_git_connections`, `connect_git_provider`, `list_git_repositories`, `list_git_branches`, `inspect_repository`, `list_images`, `list_application_packages`, `list_database_packages`, `list_databases`, `create_database`, `get_database_state`, `list_applications`, `create_application`, `get_application`, `update_build_settings`, `link_database_to_application`, `list_storage_packages`, `create_application_storage`, `create_deployment`, `wait_for_deployment`, `get_deployments`, `cancel_deployment`, `get_application_logs`, `set_environment_variables`, `add_domain`, `check_domain_status`
+`get_current_workspace`, `get_workspace_limits`, `get_workspace_services_brief`, `get_credit_balance`, `list_projects`, `create_project`, `get_git_connections`, `connect_git_provider`, `list_git_repositories`, `list_git_branches`, `inspect_repository`, `list_images`, `list_application_packages`, `list_database_packages`, `list_databases`, `create_database`, `get_database_state`, `list_applications`, `create_application`, `get_application`, `update_build_settings`, `link_database_to_application`, `list_storage_packages`, `create_application_storage`, `create_deployment`, `wait_for_deployment`, `get_deployments`, `cancel_deployment`, `get_application_logs`, `set_environment_variables`, `add_domain`, `check_domain_status`
 
 ## Related skills
 
@@ -254,5 +254,5 @@ On `SUCCESSFUL`, summarize with a markdown link to the default domain, e.g. [Ope
 - **databases** — create/link/rotate managed DBs
 - **storage** — persistent volumes
 - **domains** — custom domains + DNS
-- **projects** — team/project grouping
+- **projects** — workspace/project grouping
 - **billing** — credits and spend

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Skills and docs say workspace and call `list_workspaces`, `get_current_workspace`, `get_workspace_limits`, `get_workspace_services_brief`, and `get_workspace_usage` (response keys `workspace`, `workspaces`, `workspaceUsage`)
+
 ## [0.3.0] - 2026-09-11
 
 ### Added

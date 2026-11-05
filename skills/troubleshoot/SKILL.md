@@ -15,7 +15,7 @@ Identify the failing application, read deployment state and logs, classify the f
 ## Prerequisites
 
 ```
-get_current_team()
+get_current_workspace()
 list_applications(application_type="web")   # also try worker / private / static
 ```
 
@@ -59,7 +59,7 @@ Use `liveDeployment` and `lastDeployment` plus `state`:
 | `SUCCESSFUL` | Build/release OK; look at runtime/request logs if the app still misbehaves |
 | `FAILED` | Read build then runtime logs |
 | `CANCELLED` | Ask whether to redeploy |
-| `LIMITS` | Team/plan limits — `get_team_limits` / **billing** skill |
+| `LIMITS` | Workspace/plan limits — `get_workspace_limits` / **billing** skill |
 
 ### 3. Pull logs
 
@@ -151,7 +151,7 @@ For domain issues, use `check_domain_status` (see **domains**). Cap at **3 fix c
 
 ## Relevant tools
 
-`get_current_team`, `list_applications`, `get_application`, `get_build_settings`, `get_deployments`, `wait_for_deployment`, `cancel_deployment`, `create_deployment`, `get_application_logs`, `get_application_metrics`, `list_environment_variables`, `reveal_environment_variables`, `set_environment_variables`, `delete_environment_variables`, `update_build_settings`, `update_application`, `restart_application`, `list_databases`, `get_database`, `get_database_state`, `get_database_metrics`, `rotate_database_user_password`, `link_database_to_application`, `check_domain_status`, `get_team_limits`
+`get_current_workspace`, `list_applications`, `get_application`, `get_build_settings`, `get_deployments`, `wait_for_deployment`, `cancel_deployment`, `create_deployment`, `get_application_logs`, `get_application_metrics`, `list_environment_variables`, `reveal_environment_variables`, `set_environment_variables`, `delete_environment_variables`, `update_build_settings`, `update_application`, `restart_application`, `list_databases`, `get_database`, `get_database_state`, `get_database_metrics`, `rotate_database_user_password`, `link_database_to_application`, `check_domain_status`, `get_workspace_limits`
 
 ## Related skills
 

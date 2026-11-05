@@ -49,5 +49,5 @@ Complete OAuth when Claude Code prompts for the Seenode MCP server.
 ## Smoke test
 
 ```text
-Use get_current_team and summarize my Seenode team.
+Use get_current_workspace and summarize my Seenode workspace.
 ```
